@@ -17,6 +17,7 @@ if __name__ == '__main__':
     torch.backends.cudnn.benchmark = False
 
     print(torch.cuda.is_available)
+    print(torch.cuda.device_count())
     
     parser = argparse.ArgumentParser(description='GPT2pretraining')
     parser.add_argument('--model_name', type=str, default='GPT2pretrained')
