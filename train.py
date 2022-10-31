@@ -15,6 +15,8 @@ if __name__ == '__main__':
     torch.cuda.manual_seed_all(random_seed) # if use multi-GPU
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
+
+    print(torch.cuda.is_available)
     
     parser = argparse.ArgumentParser(description='GPT2pretraining')
     parser.add_argument('--model_name', type=str, default='GPT2pretrained')
