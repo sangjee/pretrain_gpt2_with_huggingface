@@ -4,10 +4,18 @@ import pandas as pd
 from GPT2PretrainDataModule import GPT2PretrainDataModule
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 from pytorch_lightning.loggers import TensorBoardLogger
-from pytorch_lightning import Trainer
+import pytorch_lightning as pl
 import argparse
+import torch
 
 if __name__ == '__main__':
+    random_seed = 42
+    pl.seed_everything(random_seed, workers=True)
+    torch.cuda.manual_seed(random_seed)
+    torch.cuda.manual_seed_all(random_seed) # if use multi-GPU
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    
     parser = argparse.ArgumentParser(description='GPT2pretraining')
     parser.add_argument('--model_name', type=str, default='GPT2pretrained')
     parser.add_argument('--save_path', type=str, default='./save_model')
@@ -59,7 +67,7 @@ if __name__ == '__main__':
     logger = TensorBoardLogger(args.log_path, name=args.model_name)
     early_stopping_callback = EarlyStopping(monitor='val_loss', patience=args.patience)
     
-    trainer = Trainer(
+    trainer = pl.Trainer(
         logger=logger,
         callbacks=[checkpoint_callback],
         max_epochs=args.epoch,
