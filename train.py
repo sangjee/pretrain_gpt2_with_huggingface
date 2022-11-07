@@ -53,8 +53,11 @@ if __name__ == '__main__':
     test_df = pd.read_csv(args.test_data_path)
     val_df = pd.read_csv(args.val_data_path)
 
+    train_df = pd.concat([train_df,test_df])
+    train_df = pd.concat([train_df,val_df])
+
     tokenizer = GPT2Tokenizer(vocab_file='./bbpe/vocab.json', merges_file='./bbpe/merges.txt', eos_token="<|endoftext|>",bos_token="<?", pad_token="+=")
-    data_module = GPT2PretrainDataModule(train_df=train_df, val_df=val_df, test_df=test_df, batch_size=args.batch_size, tokenizer=tokenizer, num_workers=args.num_workers)
+    data_module = GPT2PretrainDataModule(train_df=train_df, val_df=train_df, test_df=train_df, batch_size=args.batch_size, tokenizer=tokenizer, num_workers=args.num_workers)
     model = GPT2PretrainModel(config, lr=args.lr)
 
     checkpoint_callback = ModelCheckpoint(
